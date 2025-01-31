@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Activity } from 'lucide-react';
 
-function App() {
+function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
 
   return (
@@ -125,4 +125,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;
