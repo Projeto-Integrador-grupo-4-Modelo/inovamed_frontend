@@ -1,7 +1,7 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
-<<<<<<< HEAD
 @tailwind utilities;
-=======
-@tailwind utilities;
->>>>>>> ee3f85137a65a5e1130164d093bae7c751f7b7f2
+body {
+  @apply bg-gradient-to-br from-teal-50 to-emerald-100 min-h-screen;
+}
