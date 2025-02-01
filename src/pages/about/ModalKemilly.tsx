@@ -2,7 +2,7 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { Github, Linkedin } from "lucide-react";
 
-function ModalPostagem() {
+function ModalKemilly() {
   return (
     <>
       <style>
@@ -23,9 +23,9 @@ function ModalPostagem() {
       <Popup
         trigger={
           <img
-            src="https://i.imgur.com/WClng0S.png"
+            src="https://i.imgur.com/MLVXxOe.jpg"
             alt="Team Member"
-            className="w-32 h-32 rounded-full mx-auto mb-4 object-cover ring-2 ring-yellow-500 cursor-pointer"
+            className="w-32 h-32 rounded-full mx-auto mb-4 object-cover ring-2 ring-[#42f8e2] cursor-pointer hover:scale-110 transition-transform duration-300"
           />
         }
         modal
@@ -33,9 +33,9 @@ function ModalPostagem() {
         <div className="bg-gray-200 rounded-lg p-6 max-w-sm mx-auto shadow-xl">
           <div className="flex flex-col items-center">
             <img
-              src="https://i.imgur.com/WClng0S.png"
+              src="https://i.imgur.com/MLVXxOe.jpg"
               alt="Team Member"
-              className="w-32 h-32 rounded-full mb-6 object-cover ring-4 ring-yellow-500"
+              className="w-32 h-32 rounded-full mb-6 object-cover ring-4 ring-[#42f8e2]"
             />
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Kemilly Fagundes
@@ -54,7 +54,7 @@ function ModalPostagem() {
                 href="https://github.com/Kemilly-fgnds"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-gray-100 rounded-full hover:bg-yellow-300 transition-colors"
+                className="p-2 bg-gray-100 rounded-full hover:bg-[#42f8e2] transition-colors"
               >
                 <Github className="w-6 h-6 text-gray-700" />
               </a>
@@ -62,7 +62,7 @@ function ModalPostagem() {
                 href="https://www.linkedin.com/in/kemilly-fagundes-da-silva/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-gray-100 rounded-full hover:bg-yellow-300 transition-colors"
+                className="p-2 bg-gray-100 rounded-full hover:bg-[#42f8e2] transition-colors"
               >
                 <Linkedin className="w-6 h-6 text-gray-700" />
               </a>
@@ -74,4 +74,4 @@ function ModalPostagem() {
   );
 }
 
-export default ModalPostagem;
+export default ModalKemilly;
