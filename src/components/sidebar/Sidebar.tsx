@@ -30,12 +30,12 @@ export function Sidebar() {
     {
       icon: UserPlus,
       label: "Cadastro de Paciente",
-      path: "/dashboard/paciente",
+      path: "/dashboard/cadastro-paciente",
     },
     {
       icon: User,
       label: "Pacientes",
-      path: "#",
+      path: "/dashboard/pacientes",
     },
   ];
 

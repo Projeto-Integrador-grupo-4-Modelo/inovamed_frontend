@@ -1,48 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import Cliente from '../../../models/Cliente';
-
+import React, { useState, useEffect, useContext } from "react";
+import { X } from "lucide-react";
+import Cliente from "../../../models/Cliente";
+import { atualizar } from "../../../service/Service";
+import { AuthContext } from "../../../context/AuthContext";
 
 interface AtualizarPacienteModalProps {
-  patient: Cliente;
+  paciente: Cliente;
   isOpen: boolean;
   onClose: () => void;
   onUpdate: (AtualizarPaciente: Cliente) => void;
 }
 
-export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: AtualizarPacienteModalProps) {
-  const [formData, setFormData] = useState<Omit<Cliente, 'id' | 'consulta'>>({
-    nome: '',
-    email: '',
-    telefone: '',
-    cpf: '',
-    endereco: '',
-    convenio: false
+export function AtualizarPacienteModal({
+  paciente,
+  isOpen,
+  onClose,
+  onUpdate,
+}: AtualizarPacienteModalProps) {
+  const [formData, setFormData] = useState<Omit<Cliente, "consulta">>({
+    id: 0,
+    nome: "",
+    email: "",
+    telefone: "",
+    cpf: "",
+    endereco: "",
+    convenio: false,
   });
+
+  const { usuario, handleLogout } = useContext(AuthContext);
+  const token = usuario.token;
 
   useEffect(() => {
     if (isOpen) {
       setFormData({
+        id: paciente.id,
         nome: paciente.nome,
         email: paciente.email,
         telefone: paciente.telefone,
         cpf: paciente.cpf,
         endereco: paciente.endereco,
-        convenio: paciente.convenio
+        convenio: paciente.convenio,
       });
     }
   }, [isOpen, paciente]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onUpdate({
-      ...paciente,
-      ...formData
-    });
-    onClose();
+    try {
+      await atualizarPaciente();
+      onUpdate({ ...paciente, ...formData });
+      onClose();
+    } catch (error) {
+      console.error("Erro ao atualizar paciente:", error);
+    }
   };
 
   if (!isOpen) return null;
+
+  async function atualizarPaciente() {
+    try {
+      await atualizar(`/clientes`, formData, setFormData, {
+        headers: { Authorization: token },
+      });
+
+      alert("Paciente atualizado com sucesso!");
+    } catch (error: any) {
+      if (error.toString().includes("403")) {
+        handleLogout();
+      }
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -53,9 +80,11 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
         >
           <X className="w-6 h-6" />
         </button>
-        
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Atualizar Paciente</h2>
-        
+
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          Atualizar Paciente
+        </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -64,7 +93,9 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
             <input
               type="text"
               value={formData.nome}
-              onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, nome: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
               required
             />
@@ -77,7 +108,9 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
               required
             />
@@ -90,7 +123,9 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
             <input
               type="tel"
               value={formData.telefone}
-              onChange={(e) => setFormData(prev => ({ ...prev, telefone: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, telefone: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
               required
             />
@@ -103,7 +138,9 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
             <input
               type="text"
               value={formData.cpf}
-              onChange={(e) => setFormData(prev => ({ ...prev, cpf: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, cpf: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
               required
             />
@@ -116,7 +153,9 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
             <input
               type="text"
               value={formData.endereco}
-              onChange={(e) => setFormData(prev => ({ ...prev, endereco: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, endereco: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
               required
             />
@@ -127,10 +166,15 @@ export function AtualizarPacienteModal({ paciente, isOpen, onClose, onUpdate }: 
               type="checkbox"
               id="convenio"
               checked={formData.convenio}
-              onChange={(e) => setFormData(prev => ({ ...prev, convenio: e.target.checked }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, convenio: e.target.checked }))
+              }
               className="h-4 w-4 text-teal-600 focus:ring-teal-600 border-teal-600 rounded"
             />
-            <label htmlFor="convenio" className="ml-2 block text-sm text-gray-700">
+            <label
+              htmlFor="convenio"
+              className="ml-2 block text-sm text-gray-700"
+            >
               Convênio
             </label>
           </div>

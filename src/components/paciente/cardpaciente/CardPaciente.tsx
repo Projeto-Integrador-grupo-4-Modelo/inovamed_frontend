@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { Phone, Mail, MapPin, CreditCard, User, Trash2, Edit } from 'lucide-react';
-import Cliente from '../../../models/Cliente';
-import { AtualizarPacienteModal } from '../atualizarpaciente/AtualizarPaciente';
+import React, { useContext, useState } from "react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  CreditCard,
+  User,
+  Trash2,
+  Edit,
+} from "lucide-react";
+import Cliente from "../../../models/Cliente";
+import { AtualizarPacienteModal } from "../atualizarpaciente/AtualizarPaciente";
 
 interface CardPacienteProps {
   paciente: Cliente;
@@ -9,7 +17,11 @@ interface CardPacienteProps {
   onUpdate: (patient: Cliente) => void;
 }
 
-export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps) {
+export function CardPaciente({
+  paciente,
+  onUpdate,
+  onDelete,
+}: CardPacienteProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -22,7 +34,9 @@ export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps
                 <User className="w-6 h-6 text-teal-800" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white">{paciente.nome}</h3>
+                <h3 className="text-xl font-semibold text-white">
+                  {paciente.nome}
+                </h3>
                 <p className="text-blue-100">CPF: {paciente.cpf}</p>
               </div>
             </div>
@@ -44,7 +58,7 @@ export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps
             </div>
           </div>
         </div>
-        
+
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
@@ -52,23 +66,23 @@ export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps
                 <Phone className="w-5 h-5 text-gray-500" />
                 <span className="text-gray-600">{paciente.telefone}</span>
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-gray-500" />
                 <span className="text-gray-600">{paciente.email}</span>
               </div>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-gray-500" />
                 <span className="text-gray-600">{paciente.endereco}</span>
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <CreditCard className="w-5 h-5 text-gray-500" />
                 <span className="text-gray-600">
-                  {paciente.convenio ? 'Convênio' : 'Particular'}
+                  {paciente.convenio ? "Convênio" : "Particular"}
                 </span>
               </div>
             </div>

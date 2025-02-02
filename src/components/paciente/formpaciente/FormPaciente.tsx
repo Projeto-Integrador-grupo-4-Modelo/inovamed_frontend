@@ -52,7 +52,7 @@ function FormPaciente() {
   }
 
   function retornar() {
-    navigate("/clientes");
+    navigate("/dashboard/pacientes");
   }
 
   async function gerarNovoCliente(e: ChangeEvent<HTMLFormElement>) {
