@@ -1,112 +1,127 @@
-import { Target, Heart, Award } from "lucide-react";
-
-import ModalBianca from "./ModalBianca";
-import ModalKemilly from "./ModalKemilly";
-import ModalPriscila from "./ModalPriscila";
-import ModalBruna from "./ModalBruna";
-import ModalVitor from "./ModalVitor";
-import ModalRubio from "./ModalRubio";
-import ModalGuilherme from "./ModalGuilherme";
-import ModalVictoria from "./ModalVictoria";
+import { Heart, Target, Lightbulb, Users, Clock, Shield, Award, ThumbsUp, Stethoscope, Github, Linkedin, UsersRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function About() {
+
+  const navigate = useNavigate();
+
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
   return (
-    <div>
-      <section className="relative bg-gradient-to-r from-[#0D9488] via-[#1C74C8] to-[#0D9389] py-20">
-        <div className="absolute inset-0">
-          <img
-            src="https://i.imgur.com/FCT3t42.jpg"
-            alt="Background"
-            className="w-full h-full object-cover opacity-50"
-          />
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <div
+        className="relative h-[400px] bg-cover bg-center"
+        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80")' }}
+      >
+        <div className="absolute inset-0 bg-teal-900/70 flex items-center">
+          <div className="container mx-auto px-6">
+            <h1 className="text-5xl font-bold text-white mb-4">Sobre a Inova Med</h1>
+            <p className="text-xl text-white">Cuidando da sua saúde com excelência e inovação</p>
+          </div>
         </div>
+      </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center">
-          <div className="md:w-1/2 text-center bg-opacity-70 p-6">
-            <h1 className="text-5xl font-bold text-[#42f8e2] mb-6">Sobre Nós</h1>
-            <p className="text-2xl text-white max-w-3xl font-semibold">
-              A InovaMed se dedica a oferecer o melhor em cuidados médicos,
-              combinando excelência profissional com atendimento humanizado.
-            </p>
-          </div>
-        </div>
-      </section>
+      <div className="container mx-auto px-6 py-16">
+        <section className="mb-20">
+          <HeaderSection icon={Target} title="Nossa Missão" />
+          <ContentBox text="Proporcionar atendimento médico de excelência, combinando tecnologia avançada e cuidado humanizado, para promover a saúde e bem-estar dos nossos pacientes." />
+        </section>
 
-      <section className="bg-gradient-to-r from-[#0D9488] via-[#1C74C8] to-[#0D9389] py-20">
-        <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-between gap-16 text-center text-white">
-          <div className="flex-1 min-w-[300px] hover:scale-105 transition-transform duration-300">
-            <Target className="h-12 w-12 text-[#42f8e2] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-3">Missão</h3>
-            <p>
-              Proporcionar atendimento médico de excelência, priorizando o bem-estar
-              e a saúde integral dos nossos pacientes.
-            </p>
-          </div>
-          <div className="flex-1 min-w-[300px] hover:scale-105 transition-transform duration-300">
-            <Heart className="h-12 w-12 text-[#42f8e2] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-3">Valores</h3>
-            <p>
-              Ética, compromisso, inovação, humanização e excelência em tudo que fazemos.
-            </p>
-          </div>
-          <div className="flex-1 min-w-[300px] hover:scale-105 transition-transform duration-300">
-            <Award className="h-12 w-12 text-[#42f8e2] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-3">Visão</h3>
-            <p>
-              Ser referência em atendimento médico humanizado, inovando constantemente
-              em práticas e tecnologias para o cuidado da saúde.
-            </p>
-          </div>
-        </div>
-      </section>
+        <section className="mb-20">
+          <HeaderSection icon={Heart} title="Nossos Valores" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+            <ValueCard icon={Users} title="Humanização" description="Tratamos cada paciente com empatia e respeito" />
+            <ValueCard icon={Award} title="Excelência" description="Buscamos a qualidade em todos os processos" />
+            <ValueCard icon={Shield} title="Ética" description="Atuamos com integridade e transparência" />
+            <ValueCard icon={Clock} title="Pontualidade" description="Respeitamos o tempo dos nossos pacientes" />
+            <ValueCard icon={ThumbsUp} title="Compromisso" description="Dedicação total à saúde dos pacientes" />
+            <ValueCard icon={Stethoscope} title="Inovação" description="Investimos em tecnologia e conhecimento" />
 
-      <section className="bg-gradient-to-r from-[#0D9488] via-[#1C74C8] to-[#0D9389] py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-[#42f8e2] mb-12">Nossa Equipe</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center text-white">
-              <ModalBianca />
-              <h3 className="text-xl font-semibold">Bianca Jesus</h3>
-              <p className="text-gray-400">Developer</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalKemilly />
-              <h3 className="text-xl font-semibold">Kemilly Fagundes</h3>
-              <p className="text-gray-400">Product Owner</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalPriscila />
-              <h3 className="text-xl font-semibold">Priscila Santos</h3>
-              <p className="text-gray-400">Developer</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalBruna />
-              <h3 className="text-xl font-semibold">Bruna Bosco</h3>
-              <p className="text-gray-400">Tester</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalVitor />
-              <h3 className="text-xl font-semibold">Vitor Cavalcante</h3>
-              <p className="text-gray-400">Developer</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalRubio />
-              <h3 className="text-xl font-semibold">Rubio Dainton</h3>
-              <p className="text-gray-400">Developer</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalGuilherme />
-              <h3 className="text-xl font-semibold">Guilherme Lima</h3>
-              <p className="text-gray-400">Developer</p>
-            </div>
-            <div className="text-center text-white">
-              <ModalVictoria />
-              <h3 className="text-xl font-semibold">Victória Lara</h3>
-              <p className="text-gray-400">Developer</p>
-            </div>
           </div>
+        </section>
+
+        <section className="mb-20">
+          <HeaderSection icon={Lightbulb} title="Nossa Visão" />
+          <ContentBox text="Ser reconhecida como referência em atendimento médico na região, destacando-se pela qualidade dos serviços, inovação tecnológica e satisfação dos pacientes." />
+        </section>
+
+        <section className="py-20">
+          <HeaderSection icon={UsersRound} title="Nossa Equipe" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <TeamCard name="Bianca de Jesus" role="Developer" image="https://i.imgur.com/3gH6LBw.png" links={[{ url: "https://github.com/Bianncajs", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/biancajesuss/", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Bruna Bosco" role="Tester" image="https://i.imgur.com/MaACJDA.png" links={[{ url: "https://github.com/BrunaBosco", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/brunabosco-/", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Guilherme Kaynam" role="Developer" image="https://i.imgur.com/DZxzHkp.jpg" links={[{ url: "https://github.com/guilhermekaynam", icon: <Github className="w-5 h-5" /> }, { url: "https://linkedin.com/in/guilherme-kaynam", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Kemilly Fagundes" role="Product Owner" image="https://i.imgur.com/MLVXxOe.jpg" links={[{ url: "https://github.com/Kemilly-fgnds", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/kemilly-fagundes-da-silva/", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Rubio Dainton" role="Developer" image="https://i.imgur.com/RWr3thk.jpg" links={[{ url: "https://github.com/Rubio01", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/rubiodainton/", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Priscila Santos" role="Developer" image="https://i.imgur.com/boEuaDa.jpg" links={[{ url: "https://github.com/Pribort", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/priscilabortniuk/", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Victória Lara" role="Developer" image="https://i.imgur.com/OD4zkur.png" links={[{ url: "https://github.com/victorialaraa", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/victoria-lara-do-nascimento/", icon: <Linkedin className="w-5 h-5" /> }]} />
+            <TeamCard name="Vítor Cavalcante" role="Developer" image="https://i.imgur.com/KptY0W0.png" links={[{ url: "https://github.com/Vitor-C-Souza", icon: <Github className="w-5 h-5" /> }, { url: "https://www.linkedin.com/in/vitorcavalcantesouza/", icon: <Linkedin className="w-5 h-5" /> }]} />
+          </div>
+        </section>
+      </div>
+      <div className="text-center py-6">
+        <button
+          onClick={handleBackToHome}
+          className="relative px-8 py-3 text-white font-semibold text-lg bg-gradient-to-r from-[#0D9488] via-[#1C74C8] to-[#0D9389] rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:brightness-110s"
+        >
+          Voltar para a Página Inicial
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function HeaderSection({ icon: Icon, title }) {
+  return (
+    <div className="flex items-center justify-center mb-12">
+      <Icon className="w-10 h-10 text-[#0D9488] mr-4" />
+      <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
+    </div>
+  );
+}
+
+function ContentBox({ text }) {
+  return (
+    <div className="group bg-gradient-to-r from-[#0D9488]/10 via-[#1C74C8]/10 to-[#0D9389]/10 rounded-xl shadow-lg p-8 border border-[#0D9488]/20 transition-all duration-300 hover:scale-105 hover:border-[#0D9488] hover:shadow-xl">
+      <p className="text-xl text-gray-700 text-center leading-relaxed transition-colors duration-300 group-hover:text-[#0D9389]">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+
+function ValueCard({ icon: Icon, title, description }) {
+  return (
+    <div className="group bg-gradient-to-r from-[#0D9488]/10 via-[#1C74C8]/10 to-[#0D9389]/10 rounded-xl shadow-lg p-6 border border-[#0D9488]/20 transition-all duration-300 hover:scale-105 hover:border-[#0D9488] hover:shadow-xl">
+      <div className="text-[#0D9488] mb-4">
+        <Icon className="w-8 h-8 transition-transform duration-300 group-hover:scale-110 group-hover:text-[#0D9389]" />
+      </div>
+      <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </div>
+  );
+}
+
+function TeamCard({ name, role, image, links }) {
+  return (
+    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#0D9488]/10 via-[#1C74C8]/10 to-[#0D9389]/10 p-6 border border-[#0D9488]/20 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+      <div className="relative z-10 text-center">
+        <div className="mb-4 h-32 w-32 mx-auto overflow-hidden rounded-full border-2 border-[#0D9488] group-hover:scale-110 transition-transform">
+          <img src={image} alt={name} className="h-full w-full object-cover" />
         </div>
-      </section>
+        <h3 className="text-xl font-semibold text-gray-800 mb-1">{name}</h3>
+        <p className="text-[#0D9488] mb-4">{role}</p>
+        <div className="flex justify-center space-x-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          {links.map((link, index) => (
+            <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[#0D9488] hover:text-[#1C74C8] transition-colors">
+              {link.icon}
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
