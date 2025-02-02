@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Calendar,
   LogOut,
@@ -10,28 +10,32 @@ import {
 } from "lucide-react";
 
 export function Sidebar() {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   const menuItems = [
     {
       icon: LayoutDashboard,
       label: "Dashboard",
-      path: "/Dashboard",
+      path: "/dashboard",
     },
-    { icon: CalendarPlus, label: "Agenda", path: "/" },
-
+    { icon: CalendarPlus, label: "Agenda", path: "#" },
     {
       icon: Calendar,
       label: "Cadastro de Consulta",
-      path: "/cadastro-consulta",
+      path: "/consulta",
     },
     {
       icon: UserPlus,
       label: "Cadastro de Paciente",
-      path: "/cadastro-paciente",
+      path: "/dashboard/paciente",
     },
     {
       icon: User,
-      label: "pacientes",
-      path: "/",
+      label: "Pacientes",
+      path: "#",
     },
   ];
 
@@ -68,11 +72,12 @@ export function Sidebar() {
 
       {/* Footer/Logout Section */}
       <div className="p-4 border-t border-white/10">
-        <button className="flex items-center gap-3 px-4 py-3 w-full rounded-lg hover:bg-white/10 transition-colors duration-200 group">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 w-full rounded-lg hover:bg-white/10 transition-colors duration-200 group"
+        >
           <LogOut className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-          <span className="font-medium">
-            <a href="/home">Sair</a>
-          </span>
+          <span className="font-medium">Sair</span>
         </button>
       </div>
     </div>

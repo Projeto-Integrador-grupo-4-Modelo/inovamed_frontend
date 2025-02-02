@@ -14,8 +14,7 @@ import { cadastrarUsuario } from "../../service/Service";
 
 function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
-  // const navigate = useNavigate();
-  const { usuario, handleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<Usuario>({
     id: 0,
@@ -71,14 +70,17 @@ function Login() {
     retornar();
   }
 
+  const { usuario, handleLogin } = useContext(AuthContext);
+
   const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>(
     {} as UsuarioLogin
   );
 
+  const token = usuario?.token;
+
   useEffect(() => {
-    if (usuario.token !== "") {
-      // navigate("/base/dashboard");
-      console.log("Logado");
+    if (token !== "") {
+      navigate("/dashboard");
     }
   }, [usuario]);
 
@@ -98,13 +100,13 @@ function Login() {
     <div className="min-h-screen items-center  bg-gradient-to-b from-[#0D9488] via-[#0d9389] to-[#1C74c8] flex mt-0 justify-center">
       <div className="bg-[#ffffff] rounded-lg shadow-xl p-8 w-full max-w-md ">
         <div className="flex items-center justify-center mb-8">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center">
-          <img
-            src="https://media.discordapp.net/attachments/1313593904657993831/1335246932192395376/LOGOTIPOedit2.PNG?ex=679f791c&is=679e279c&hm=ae3abcb2ada562179296d50fa218dd5af31b3df44380d236a432a3610ce3b31f&=&format=webp&quality=lossless"
-            alt=""
-            className="h-40 "
-          />
-        </h1>
+          <h1 className="text-2xl font-bold tracking-tight flex items-center">
+            <img
+              src="https://media.discordapp.net/attachments/1313593904657993831/1335246932192395376/LOGOTIPOedit2.PNG?ex=679f791c&is=679e279c&hm=ae3abcb2ada562179296d50fa218dd5af31b3df44380d236a432a3610ce3b31f&=&format=webp&quality=lossless"
+              alt=""
+              className="h-40 "
+            />
+          </h1>
         </div>
 
         <div className="flex space-x-4 mb-8">
@@ -258,6 +260,5 @@ function Login() {
     </div>
   );
 }
-
 
 export default Login;
