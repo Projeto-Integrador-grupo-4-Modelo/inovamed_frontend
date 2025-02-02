@@ -8,6 +8,9 @@ function Home() {
   const handleAcessarSistema = () => {
     navigate("/login");
   };
+  const handleAcessarAbout = () => {
+    navigate("/about");
+  };
 
   return (
     <>
@@ -22,11 +25,14 @@ function Home() {
               </div>
 
               <div className="flex items-center space-x-4">
-                <button className="text-teal-600 px-4 py-2 rounded-lg hover:text-teal-800 transition-colors transform hover:scale-105 hover:shadow-md">
+                <button
+                  onClick={handleAcessarAbout}
+                  className="text-teal-600 px-4 py-2 rounded-lg hover:text-teal-800 transition-colors transform hover:scale-105 hover:shadow-md"
+                >
                   <span>Sobre</span>
                 </button>
                 <button
-                  onClick={handleAcessarSistema} // Evento de click
+                  onClick={handleAcessarSistema}
                   className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors transform hover:scale-105 hover:shadow-lg flex items-center space-x-2"
                 >
                   <span>Acessar Sistema</span>
