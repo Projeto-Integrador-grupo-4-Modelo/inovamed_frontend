@@ -1,4 +1,3 @@
-import Consulta from "./Consulta";
 
 export default interface Cliente {
   id: number;
@@ -8,5 +7,4 @@ export default interface Cliente {
   cpf: string;
   endereco: string;
   convenio: boolean;
-  consulta: Consulta | null;
 }
