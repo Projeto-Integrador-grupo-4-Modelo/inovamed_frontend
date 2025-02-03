@@ -10,7 +10,8 @@ interface AtualizarConsultaModalProps {
 }
 
 export function AtualizarConsultaModal({ consulta, isOpen, onClose, onUpdate }: AtualizarConsultaModalProps) {
-    const [formData, setFormData] = useState<Omit<Consulta, "id" | "cliente">>({
+    const [formData, setFormData] = useState<Omit<Consulta, "id">>({
+        cliente: null,
         especialidade: "",
         queixa: "",
         data: "",
@@ -19,8 +20,9 @@ export function AtualizarConsultaModal({ consulta, isOpen, onClose, onUpdate }: 
     });
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && consulta) {
             setFormData({
+                cliente: consulta.cliente,
                 especialidade: consulta.especialidade,
                 queixa: consulta.queixa,
                 data: consulta.data,
@@ -33,7 +35,7 @@ export function AtualizarConsultaModal({ consulta, isOpen, onClose, onUpdate }: 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onUpdate({ ...consulta, ...formData });
-        onClose(); 
+        onClose();
     };
 
     if (!isOpen) return null;
@@ -48,9 +50,20 @@ export function AtualizarConsultaModal({ consulta, isOpen, onClose, onUpdate }: 
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Atualizar Consulta</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Paciente</label>
+                        <input
+                            type="text"
+                            value={consulta.cliente?.nome || "Paciente não informado"}
+                            disabled
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700"
+                        />
+                    </div>
+
                     {["especialidade", "queixa", "data"].map((field) => (
                         <div key={field}>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">{field}</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">{field}</label>
                             <input
                                 type={field === "data" ? "date" : "text"}
                                 value={formData[field as keyof typeof formData]}
@@ -76,7 +89,6 @@ export function AtualizarConsultaModal({ consulta, isOpen, onClose, onUpdate }: 
                         </select>
                     </div>
 
-                    
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                         <select
@@ -94,8 +106,20 @@ export function AtualizarConsultaModal({ consulta, isOpen, onClose, onUpdate }: 
                     </div>
 
                     <div className="flex justify-end space-x-3 mt-6">
-                        <button type="button" onClick={onClose} className="btn-gray">Cancelar</button>
-                        <button type="submit" className="btn-teal">Salvar</button>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="submit"
+                            onClick={onUpdate}
+                            className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                        >
+                            Salvar
+                        </button>
                     </div>
                 </form>
             </div>
