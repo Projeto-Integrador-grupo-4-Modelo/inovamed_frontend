@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Stethoscope,
   MessageCircle,
@@ -7,50 +7,180 @@ import {
   Activity,
   Users,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Consulta from "../../../models/Consulta";
+import Cliente from "../../../models/Cliente";
+import { buscar, cadastrar } from "../../../service/Service";
+import { toast } from 'react-hot-toast';
+import { AuthContext } from "../../../context/AuthContext";
 
-function App() {
-  const [formData, setFormData] = useState({
-    specialty: "",
-    complaint: "",
-    date: "",
-    doctor: "",
-    status: "Pendente",
-    client: "",
-    user: "",
+function FormConsultas() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [consulta, setConsulta] = useState<Consulta>({
+    id: 0,
+    especialidade: '',
+    data: '',
+    queixa: '',
+    medicoResponsavel: '',
+    status: 'Pendente',
+    cliente: null
   });
+  const [cliente, setCliente] = useState<Cliente | null>(null);
+  const [cpf, setCpf] = useState<string>("");
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const clients = ["João Silva", "Maria Santos", "Pedro Oliveira", "Ana Costa"];
+  const [buscaRealizada, setBuscaRealizada] = useState(false);
 
-  const users = [
-    "Dr. Carlos Santos",
-    "Dra. Amanda Lima",
-    "Dr. Roberto Souza",
-    "Dra. Patricia Costa",
-  ];
+  const { usuario } = useContext(AuthContext)
+  const token = usuario.token
 
-  const formatDate = (value: string) => {
-    return value
-      .replace(/\D/g, "")
-      .replace(/(\d{2})(\d)/, "$1/$2")
-      .replace(/(\d{2})(\d)/, "$1/$2")
-      .slice(0, 10);
+  async function buscarPacientePorCpf(cpf: string) {
+    setIsLoading(true);
+    try {
+      await buscar(`clientes/cpf/${cpf}`, setCliente, {
+        headers: { Authorization: token }
+      });
+
+      if (cliente) {
+
+        setConsulta(prev => ({ ...prev, cliente: cliente }));
+      }
+    } catch (error: any) {
+
+      setCliente(null);
+      setConsulta(prev => ({ ...prev, cliente: null }));
+    } finally {
+      setIsLoading(false);
+    }
+    setBuscaRealizada(true);
+  }
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCpf(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleCpfBlur = () => {
+    if (cpf) {
+      buscarPacientePorCpf(cpf);
+    }
+  };
+
+  const handleCpfKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (cpf) {
+        buscarPacientePorCpf(cpf);
+      }
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setConsulta(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Appointment data:", formData);
+
+    if (!consulta.cliente) {
+      toast.error('Por favor, busque um cliente válido antes de cadastrar a consulta.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const consultaData = {
+        especialidade: consulta.especialidade,
+        data: consulta.data,
+        queixa: consulta.queixa,
+        medicoResponsavel: consulta.medicoResponsavel,
+        status: consulta.status,
+        cliente: consulta.cliente
+      };
+
+      await cadastrar(
+        'consultas',
+        consultaData,
+        setConsulta,
+        {
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      toast.success('Consulta cadastrada com sucesso!');
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error);
+      toast.error('Erro ao cadastrar consulta. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Exibe o toast após a busca
+  useEffect(() => {
+    if (buscaRealizada) {
+      if (cliente) {
+        toast.success(`Cliente encontrado: ${cliente.nome}`);
+      } else {
+        toast.error("Nenhum Cliente encontrado!",);
+      }
+    }
+  }, [buscaRealizada]); // Executa apenas quando buscaRealizada muda
+
+  useEffect(() => {
+    if (!token) {
+      toast.error('Você precisa estar logado');
+      navigate('/home');
+    }
+  }, [token]);
 
   return (
-    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="px-8 py-10">
           <h2 className="text-3xl font-bold text-center text-[#29bda6] mb-8">
             Cadastrar Consulta
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="relative">
+              <label className="flex items-center text-sm font-medium text-[#] mb-1">
+                <Users className="w-4 h-4 mr-2 text-[#29bda6]" />
+                Paciente
+              </label>
+              <input
+                type="text"
+                placeholder="Digite o CPF do paciente"
+                className="w-2/3 px-4 py-2 border border-[#] rounded-md focus:ring-2 focus:ring-[#] focus:border-[#] transition-colors"
+                value={cpf}
+                onChange={handleCpfChange}
+                onBlur={handleCpfBlur}
+                onKeyDown={handleCpfKeyDown}
+                required
+              />
+              {buscaRealizada && (
+                <p className={`mt-2 text-sm ${cliente ? "text-green-600" : "text-red-600"}`}>
+                  {cliente ? `Cliente encontrado: ${cliente.nome}${cliente.convenio? " - Este paciente possui convênio ✅":""}` : "Nenhum Cliente encontrado!"}
+                </p>
+              )}
+            </div>
+            {cliente && !cliente.convenio && (
+              <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+                <p>Este paciente não possui convênio. Ofertas disponíveis:</p>
+                <ul className="list-disc ml-5">
+                  <li>Consulta particular: R$ 120,00</li>
+                  <li>Pacote familiar: R$ 450,00</li>
+                </ul>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="flex items-center text-sm font-medium text-[#] mb-1">
@@ -59,12 +189,11 @@ function App() {
                 </label>
                 <input
                   type="text"
+                  name="especialidade"
                   placeholder="Digite a especialidade"
                   className="w-full px-4 py-2 border border-[#] rounded-md focus:ring-2 focus:ring-[#] focus:border-[#] transition-colors"
-                  value={formData.specialty}
-                  onChange={(e) =>
-                    setFormData({ ...formData, specialty: e.target.value })
-                  }
+                  value={consulta.especialidade}
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -75,16 +204,11 @@ function App() {
                   Data
                 </label>
                 <input
-                  type="text"
-                  placeholder="dd/mm/aaaa"
+                  type="date"
+                  name="data"
                   className="w-full px-4 py-2 border border-[#] rounded-md focus:ring-2 focus:ring-[#] focus:border-[#] transition-colors"
-                  value={formData.date}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      date: formatDate(e.target.value),
-                    })
-                  }
+                  value={consulta.data}
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -96,12 +220,11 @@ function App() {
                 Queixa
               </label>
               <textarea
+                name="queixa"
                 placeholder="Digite a queixa do paciente"
                 className="w-full px-4 py-2 border border-[#] rounded-md focus:ring-2 focus:ring-[#29bda6] focus:border-[#29bda6] transition-colors h-32 resize-none"
-                value={formData.complaint}
-                onChange={(e) =>
-                  setFormData({ ...formData, complaint: e.target.value })
-                }
+                value={consulta.queixa}
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -113,12 +236,11 @@ function App() {
               </label>
               <input
                 type="text"
+                name="medicoResponsavel"
                 placeholder="Digite o nome do médico responsável"
                 className="w-full px-4 py-2 border border-[#] rounded-md focus:ring-2 focus:ring-[#] focus:border-[#] transition-colors"
-                value={formData.doctor}
-                onChange={(e) =>
-                  setFormData({ ...formData, doctor: e.target.value })
-                }
+                value={consulta.medicoResponsavel}
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -130,48 +252,30 @@ function App() {
                   Status
                 </label>
                 <select
+                  name="status"
                   className="w-full px-4 py-2 border border-[#] rounded-md focus:ring-2 focus:ring-[#] focus:border-[#] transition-colors bg-[#]"
-                  value={formData.status}
-                  onChange={(e) =>
-                    setFormData({ ...formData, status: e.target.value })
-                  }
+                  value={consulta.status}
+                  onChange={handleInputChange}
                   required
                 >
-                  <option value="Pendente">Pendente</option>
-                  <option value="Confirmada">Confirmada</option>
+                  <option value="Em andamento">Em andamento</option>
+                  <option value="Concluída">Concluída</option>
                   <option value="Cancelada">Cancelada</option>
-                  <option value="Realizada">Realizada</option>
+                  <option value="Confirmada">Confirmada</option>
                 </select>
               </div>
-            </div>
-            <div className="relative">
-              <label className="flex items-center text-sm font-medium text-[#] mb-1">
-                <Users className="w-4 h-4 mr-2 text-[#29bda6]" />
-                Usuário
-              </label>
-              <select
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors bg-white relative z-10"
-                value={formData.user}
-                onChange={(e) =>
-                  setFormData({ ...formData, user: e.target.value })
-                }
-                required
-              >
-                <option value="">Selecione o Usuário</option>
-                {users.map((user) => (
-                  <option key={user} value={user}>
-                    {user}
-                  </option>
-                ))}
-              </select>
             </div>
 
             <div className="pt-6">
               <button
                 type="submit"
-                className="w-full bg-[#29bda6] text-[#ffffff] py-3 px-4 rounded-md hover:bg-[#278b7c] transition-colors focus:outline-none focus:ring-2 focus:ring-[#6366f1] focus:ring-offset-2 text-lg font-medium"
+                disabled={isLoading || !cliente}
+                className={`w-full py-3 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#6366f1] focus:ring-offset-2 text-lg font-medium ${isLoading || !cliente
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-[#29bda6] hover:bg-[#278b7c] text-white'
+                  }`}
               >
-                Cadastrar Consulta
+                {isLoading ? 'Cadastrando...' : 'Cadastrar Consulta'}
               </button>
             </div>
           </form>
@@ -181,4 +285,4 @@ function App() {
   );
 }
 
-export default App;
+export default FormConsultas;
