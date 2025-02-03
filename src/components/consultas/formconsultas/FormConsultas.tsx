@@ -28,34 +28,39 @@ function FormConsultas() {
   });
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [cpf, setCpf] = useState<string>("");
-
   const [buscaRealizada, setBuscaRealizada] = useState(false);
 
-  const { usuario, handleLogout } = useContext(AuthContext);
+  const { usuario } = useContext(AuthContext);
   const token = usuario.token;
 
   async function buscarPacientePorCpf(cpf: string) {
     setIsLoading(true);
     setBuscaRealizada(false);
-    try {
-      await buscar(`clientes/cpf/${cpf}`, setCliente, {
-        headers: { Authorization: token },
-      });
 
-      if (cliente) {
-        setConsulta((prev) => ({ ...prev, cliente: cliente }));
+    try {
+      let clienteEncontrado: Cliente | null = null;
+
+      await buscar(
+        `clientes/cpf/${cpf}`,
+        (data: Cliente) => {
+          clienteEncontrado = data;
+          setCliente(data);
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      if (clienteEncontrado) {
+        setConsulta((prev) => ({ ...prev, cliente: clienteEncontrado }));
       }
-      console.log(cliente);
     } catch (error: any) {
-      if (error.toString().includes("403")) {
-        handleLogout();
-      }
       setCliente(null);
       setConsulta((prev) => ({ ...prev, cliente: null }));
     } finally {
       setIsLoading(false);
+      setBuscaRealizada(true);
     }
-    setBuscaRealizada(true);
   }
 
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,18 +91,14 @@ function FormConsultas() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!consulta.cliente) {
+      toast.error("Selecione um cliente antes de cadastrar a consulta.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const consultaData = {
-        especialidade: consulta.especialidade,
-        data: consulta.data,
-        queixa: consulta.queixa,
-        medicoResponsavel: consulta.medicoResponsavel,
-        status: consulta.status,
-        cliente: consulta.cliente,
-      };
-
-      await cadastrar("consultas", consultaData, setConsulta, {
+      await cadastrar("consultas", consulta, setConsulta, {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -106,10 +107,7 @@ function FormConsultas() {
 
       toast.success("Consulta cadastrada com sucesso!");
       navigate("/dashboard");
-    } catch (error: any) {
-      if (error.toString().includes("403")) {
-        handleLogout();
-      }
+    } catch (error) {
       console.error("Erro ao cadastrar:", error);
       toast.error("Erro ao cadastrar consulta. Tente novamente.");
     } finally {
@@ -117,7 +115,6 @@ function FormConsultas() {
     }
   };
 
-  // Exibe o toast após a busca
   useEffect(() => {
     if (buscaRealizada) {
       if (cliente) {
@@ -126,14 +123,14 @@ function FormConsultas() {
         toast.error("Nenhum Cliente encontrado!");
       }
     }
-  }, [buscaRealizada]); // Executa apenas quando buscaRealizada muda
+  }, [buscaRealizada, cliente]);
 
   useEffect(() => {
     if (!token) {
       toast.error("Você precisa estar logado");
       navigate("/home");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -273,12 +270,11 @@ function FormConsultas() {
               <button
                 type="submit"
                 disabled={isLoading || !cliente}
-                className={`w-full py-3 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#6366f1] focus:ring-offset-2 text-lg font-medium 
-                  ${
-                    isLoading || !cliente
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-[#29bda6] hover:bg-[#278b7c] text-white"
-                  }`}
+                className={`w-full py-3 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#6366f1] focus:ring-offset-2 text-lg font-medium ${
+                  isLoading || !cliente
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#29bda6] hover:bg-[#278b7c] text-white"
+                }`}
               >
                 {isLoading ? "Cadastrando..." : "Cadastrar Consulta"}
               </button>

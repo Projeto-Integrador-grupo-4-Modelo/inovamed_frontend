@@ -56,11 +56,7 @@ export function Sidebar() {
       {/* Logo Section */}
       <div className="p-6 border-b border-white/10">
         <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <img
-            src="https://media.discordapp.net/attachments/1311370458414841927/1335635408289140908/Design_sem_nome_5.webp?ex=67a0e2e8&is=679f9168&hm=640fc6fd38f162bc770e15fc19908162387aa2ae587064b9d6dd39acc9108709&=&format=webp"
-            alt=""
-            className="h-20"
-          />
+          <img src="https://i.imgur.com/Xza8h0B.png" alt="" className="h-20" />
         </h1>
       </div>
 
