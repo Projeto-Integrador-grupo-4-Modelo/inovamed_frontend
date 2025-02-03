@@ -16,10 +16,12 @@ function Home() {
     <>
       <div className="min-h-screen ">
         <nav className="bg-white shadow-md rounded-lg hover:shadow-xl transition-shadow cursor-pointer">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="px-4 sm:px-6 lg:px-8 py-4">
+            {" "}
+            {/* Removido o max-w-7xl e mx-auto */}
             <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold text-teal-600">
+              <div className="flex items-center justify-start space-x-2">
+                <span className="text-3xl font-bold text-teal-600">
                   Inova Med
                 </span>
               </div>
