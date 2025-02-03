@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://projeto-crm.onrender.com/",
+ baseURL: import.meta.env.VITE_API_URL
 });
 
 export const cadastrarUsuario = async (
