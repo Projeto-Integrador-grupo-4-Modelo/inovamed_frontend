@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { Phone, Mail, MapPin, CreditCard, User, Trash2, Edit } from 'lucide-react';
 import Cliente from '../../../models/Cliente';
 import { AtualizarPacienteModal } from '../atualizarpaciente/AtualizarPaciente';
+import { ConfirmarDeleteModal } from '../deletarpaciente/DeletarPaciente';
 
 interface CardPacienteProps {
   paciente: Cliente;
   onDelete: (id: number) => void;
-  onUpdate: (patient: Cliente) => void;
+  onUpdate: (paciente: Cliente) => void;
 }
 
 export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
     <>
@@ -35,7 +37,7 @@ export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps
                 <Edit className="w-5 h-5" />
               </button>
               <button
-                onClick={() => onDelete(paciente.id)}
+                onClick={() => setIsDeleteModalOpen(true)}
                 className="p-2 text-white hover:bg-teal-600 rounded-full transition-colors duration-200"
                 title="Excluir paciente"
               >
@@ -81,6 +83,12 @@ export function CardPaciente({ paciente, onDelete, onUpdate }: CardPacienteProps
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onUpdate={onUpdate}
+      />
+       <ConfirmarDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => onDelete(paciente.id)}
+        paciente={paciente}
       />
     </>
   );
