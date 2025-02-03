@@ -1,13 +1,106 @@
-import React from "react";
-import { Activity, Users, Calendar, FileText } from "lucide-react";
+import React, { useEffect, useState, useContext } from "react";
+import { Users, Calendar, ArrowUp, ArrowDown } from "lucide-react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { buscar } from "../../service/Service";
+import { AuthContext } from "../../context/AuthContext";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export function Dashboard() {
+  const [pacientes, setPacientes] = useState([]);
+  const { usuario, handleLogout } = useContext(AuthContext);
+  const token = usuario.token;
+
+  useEffect(() => {
+    async function buscarPacientes() {
+      try {
+        await buscar("/clientes", setPacientes, {
+          headers: { Authorization: token },
+        });
+      } catch (error: any) {
+        if (error.toString().includes("403")) {
+          handleLogout();
+        }
+      }
+    }
+
+    buscarPacientes();
+  }, [token]);
+
   const stats = [
-    { icon: Users, label: "Pacientes Ativos", value: "2,847" },
-    { icon: Calendar, label: "Consultas Hoje", value: "42" },
-    { icon: Activity, label: "Exames Pendentes", value: "156" },
-    { icon: FileText, label: "Prontuários", value: "3,298" },
+    {
+      icon: Users,
+      label: "Pacientes Ativos",
+      value: pacientes.length,
+      trend: "up",
+      change: "+4%",
+    },
+    {
+      icon: Calendar,
+      label: "Consultas Hoje",
+      value: "42",
+      trend: "down",
+      change: "-2%",
+    },
   ];
+
+  const lineData = {
+    labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+    datasets: [
+      {
+        label: "Consultas na Semana",
+        data: [35, 42, 28, 50, 60, 45, 38],
+        borderColor: "#10B981",
+        backgroundColor: "rgba(16, 185, 129, 0.2)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+
+  const lineOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Consultas Realizadas ao Longo da Semana",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: "#E5E7EB",
+        },
+      },
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
 
   return (
     <main className="flex-1 bg-gray-50 p-8">
@@ -18,7 +111,43 @@ export function Dashboard() {
         <p className="mt-2 text-gray-600">Painel de controle e estatísticas</p>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
+          {/* Card Pacientes Ativos e Consultas Hoje lado a lado */}
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Pacientes Ativos
+                </p>
+                <p className="mt-2 text-3xl font-bold text-gray-900">
+                  {pacientes.length.toLocaleString()}
+                </p>
+                <div className="flex items-center text-sm text-gray-500 mt-1">
+                  <ArrowUp className="h-4 w-4 text-emerald-500" />
+                  <span className="text-emerald-500">+4%</span>
+                </div>
+              </div>
+              <Users className="h-8 w-8 text-emerald-500" />
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Consultas Hoje
+                </p>
+                <p className="mt-2 text-3xl font-bold text-gray-900">42</p>
+                <div className="flex items-center text-sm text-gray-500 mt-1">
+                  <ArrowDown className="h-4 w-4 text-red-500" />
+                  <span className="text-red-500">-2%</span>
+                </div>
+              </div>
+              <Calendar className="h-8 w-8 text-emerald-500" />
+            </div>
+          </div>
+
+          {/* Outros Cards */}
+          {stats.slice(2).map((stat, index) => (
             <div
               key={index}
               className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
@@ -29,8 +158,26 @@ export function Dashboard() {
                     {stat.label}
                   </p>
                   <p className="mt-2 text-3xl font-bold text-gray-900">
-                    {stat.value}
+                    {typeof stat.value === "number"
+                      ? stat.value.toLocaleString()
+                      : stat.value}
                   </p>
+                  <div className="flex items-center text-sm text-gray-500 mt-1">
+                    {stat.trend === "up" ? (
+                      <ArrowUp className="h-4 w-4 text-emerald-500" />
+                    ) : (
+                      <ArrowDown className="h-4 w-4 text-red-500" />
+                    )}
+                    <span
+                      className={
+                        stat.trend === "up"
+                          ? "text-emerald-500"
+                          : "text-red-500"
+                      }
+                    >
+                      {stat.change}
+                    </span>
+                  </div>
                 </div>
                 <stat.icon className="h-8 w-8 text-emerald-500" />
               </div>
@@ -38,33 +185,12 @@ export function Dashboard() {
           ))}
         </div>
 
-        {/* Recent Activity Section */}
         <div className="mt-8">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Atividades Recentes
+            Consultas da Semana
           </h3>
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <div className="space-y-4">
-              {[1, 2, 3].map((_, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between py-3 border-b last:border-0"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                    <div>
-                      <p className="font-medium text-gray-800">
-                        Nova consulta agendada
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Dr. Silva - Cardiologia
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-sm text-gray-500">Há 2 horas</span>
-                </div>
-              ))}
-            </div>
+            <Line data={lineData} options={lineOptions} />
           </div>
         </div>
       </div>

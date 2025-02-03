@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 import { atualizar, buscar, cadastrar } from "../../../service/Service";
 import { RotatingLines } from "react-loader-spinner";
+import toast from "react-hot-toast";
 
 function FormPaciente() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ function FormPaciente() {
 
   useEffect(() => {
     if (token === "") {
-      alert("Você precisa estar logado!");
+      toast.error("Você precisa estar logado!");
       navigate("/");
     }
   }, [token]);
@@ -64,18 +65,18 @@ function FormPaciente() {
         await atualizar(`/clientes`, cliente, setCliente, {
           headers: { Authorization: token },
         });
-        alert("O Paciente foi atualizado com sucesso!");
+        toast.success("O Paciente foi atualizado com sucesso!");
       } else {
         await cadastrar(`/clientes`, cliente, setCliente, {
           headers: { Authorization: token },
         });
-        alert("O Paciente foi cadastrado com sucesso!");
+        toast.success("O Paciente foi cadastrado com sucesso!");
       }
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();
       } else {
-        alert("Erro ao processar a solicitação.");
+        toast.error("Erro ao processar a solicitação.");
       }
     }
 

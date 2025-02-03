@@ -11,6 +11,7 @@ import { AuthContext } from "../../context/AuthContext";
 import UsuarioLogin from "../../models/UsuarioLogin";
 import Usuario from "../../models/Usuario";
 import { cadastrarUsuario } from "../../service/Service";
+import toast from "react-hot-toast";
 
 function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -55,12 +56,12 @@ function Login() {
     if (confirmaSenha === formData.senha && formData.senha.length >= 8) {
       try {
         await cadastrarUsuario(`/usuarios/cadastrar`, formData, setFormData);
-        alert("Usuário cadastrado com sucesso!");
+        toast.success("Usuário cadastrado com sucesso!");
       } catch (error) {
-        alert("Erro ao cadastrar o usuário!");
+        toast.custom("Erro ao cadastrar o usuário!");
       }
     } else {
-      alert(
+      toast.error(
         "Dados do usuário inconsistentes! Verifique as informações do cadastro."
       );
       setFormData({ ...formData, senha: "" });
@@ -102,7 +103,7 @@ function Login() {
         <div className="flex items-center justify-center mb-8">
           <h1 className="text-2xl font-bold tracking-tight flex items-center">
             <img
-              src="https://media.discordapp.net/attachments/1313593904657993831/1335246932192395376/LOGOTIPOedit2.PNG?ex=679f791c&is=679e279c&hm=ae3abcb2ada562179296d50fa218dd5af31b3df44380d236a432a3610ce3b31f&=&format=webp&quality=lossless"
+              src="https://media.discordapp.net/attachments/1311370458414841927/1336006148935127142/WhatsApp_Image_2025-02-02_at_12.38.59.jpeg?ex=67a23c2f&is=67a0eaaf&hm=25685d0f065aaec9159a59507fd6d02da64464884ef1b43ec8d777d3dc4e8aa3&=&format=webp"
               alt=""
               className="h-40 "
             />

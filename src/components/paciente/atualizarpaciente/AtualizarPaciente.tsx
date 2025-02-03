@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import Cliente from "../../../models/Cliente";
 import { atualizar } from "../../../service/Service";
 import { AuthContext } from "../../../context/AuthContext";
+import toast from "react-hot-toast";
 
 interface AtualizarPacienteModalProps {
   paciente: Cliente;
@@ -63,7 +64,7 @@ export function AtualizarPacienteModal({
         headers: { Authorization: token },
       });
 
-      alert("Paciente atualizado com sucesso!");
+      toast.success("Paciente atualizado com sucesso!");
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();

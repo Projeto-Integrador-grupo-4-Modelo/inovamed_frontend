@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from "react";
 import UsuarioLogin from "../models/UsuarioLogin";
 import { login } from "../service/Service";
+import toast from "react-hot-toast";
 
 interface AuthContextProps {
   usuario: UsuarioLogin;
@@ -31,9 +32,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
     try {
       await login(`/usuarios/logar`, usuarioLogin, setUsuario);
-      alert("Usuário foi autenticado com sucesso!");
+      toast.success("Usuário foi autenticado com sucesso!");
     } catch (error) {
-      alert("Os dados do Usuário estão inconsistentes!");
+      toast.error("Os dados do Usuário estão inconsistentes!");
     }
     setIsLoading(false);
   }

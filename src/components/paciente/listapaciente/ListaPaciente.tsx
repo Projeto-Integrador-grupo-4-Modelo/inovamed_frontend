@@ -4,6 +4,7 @@ import { CardPaciente } from "../cardpaciente/CardPaciente";
 import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { buscar, deletar } from "../../../service/Service";
+import toast from "react-hot-toast";
 
 export function ListaPaciente() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export function ListaPaciente() {
 
   useEffect(() => {
     if (token === "") {
-      alert("Você precisa estar logado");
+      toast.error("Você precisa estar logado");
       navigate("/");
     } else {
       buscaPacientes();
@@ -47,7 +48,7 @@ export function ListaPaciente() {
       if (error.toString().includes("403")) {
         handleLogout();
       } else {
-        alert("Erro ao deletar o paciente.");
+        toast.error("Erro ao deletar o paciente.");
       }
     }
   }
