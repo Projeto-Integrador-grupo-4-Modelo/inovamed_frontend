@@ -18,7 +18,7 @@ function About() {
         <div className="absolute inset-0 bg-teal-900/70 flex items-center">
           <div className="container mx-auto px-6">
             <h1 className="text-5xl font-bold text-white mb-4">Sobre a Inova Med</h1>
-            <p className="text-xl text-white">Cuidando da sua saúde com excelência e inovação</p>
+            <p className="text-xl text-white">Criamos o InovaMed para transformar a experiência de agendamentos médicos. Nosso sistema garante a eficiência para profissionais da saúde e praticidade para os usuários.</p>
           </div>
         </div>
       </div>
@@ -26,7 +26,7 @@ function About() {
       <div className="container mx-auto px-6 py-16">
         <section className="mb-20">
           <HeaderSection icon={Target} title="Nossa Missão" />
-          <ContentBox text="Proporcionar atendimento médico de excelência, combinando tecnologia avançada e cuidado humanizado, para promover a saúde e bem-estar dos nossos pacientes." />
+          <ContentBox text=" Desenvolver soluções tecnológicas que otimizam processos médicos, tornando o agendamento e a gestão de consultas mais ágeis e eficazes." />
         </section>
 
         <section className="mb-20">
@@ -44,7 +44,7 @@ function About() {
 
         <section className="mb-20">
           <HeaderSection icon={Lightbulb} title="Nossa Visão" />
-          <ContentBox text="Ser reconhecida como referência em atendimento médico na região, destacando-se pela qualidade dos serviços, inovação tecnológica e satisfação dos pacientes." />
+          <ContentBox text="Ser referência no desenvolvimento de plataformas inteligentes para a área da saúde, focando em automação, segurança e inovação." />
         </section>
 
         <section className="py-20">
