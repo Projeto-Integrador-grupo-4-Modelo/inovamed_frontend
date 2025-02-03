@@ -95,22 +95,53 @@ export function AtualizarConsultaModal({
             />
           </div>
 
-          {["especialidade", "queixa", "data"].map((field) => (
-            <div key={field}>
-              <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                {field}
-              </label>
-              <input
-                type={field === "data" ? "date" : "text"}
-                value={formData[field as keyof typeof formData]}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, [field]: e.target.value }))
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
-                required
-              />
-            </div>
-          ))}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Especialidade
+            </label>
+            <input
+              type="text"
+              value={formData.especialidade}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  especialidade: e.target.value,
+                }))
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Queixa
+            </label>
+            <input
+              type="text"
+              value={formData.queixa}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, queixa: e.target.value }))
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Data
+            </label>
+            <input
+              type="date"
+              value={formData.data}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, data: e.target.value }))
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
+              required
+            />
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -164,7 +195,11 @@ export function AtualizarConsultaModal({
             </button>
             <button
               type="submit"
-              onClick={onUpdate}
+              onClick={(e) => {
+                e.preventDefault();
+                onUpdate({ ...consulta, ...formData });
+                onClose();
+              }}
               className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
             >
               Salvar

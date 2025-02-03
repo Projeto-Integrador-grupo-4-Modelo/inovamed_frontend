@@ -35,6 +35,7 @@ export function Dashboard() {
         await buscar("/clientes", setPacientes, {
           headers: { Authorization: token },
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.toString().includes("403")) {
           handleLogout();
@@ -80,7 +81,7 @@ export function Dashboard() {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: "top" as const,
       },
       title: {
         display: true,
