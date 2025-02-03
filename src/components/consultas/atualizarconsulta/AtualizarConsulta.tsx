@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { X } from "lucide-react";
 import Consulta from "../../../models/Consulta";
+import { AuthContext } from "../../../context/AuthContext";
+import toast from "react-hot-toast";
+import { atualizar } from "../../../service/Service";
 
 interface AtualizarConsultaModalProps {
   consulta: Consulta;
@@ -15,7 +18,8 @@ export function AtualizarConsultaModal({
   onClose,
   onUpdate,
 }: AtualizarConsultaModalProps) {
-  const [formData, setFormData] = useState<Omit<Consulta, "id">>({
+  const [formData, setFormData] = useState<Consulta>({
+    id: 0,
     cliente: null,
     especialidade: "",
     queixa: "",
@@ -24,9 +28,13 @@ export function AtualizarConsultaModal({
     status: "",
   });
 
+  const { usuario, handleLogout } = useContext(AuthContext);
+  const token = usuario.token;
+
   useEffect(() => {
     if (isOpen && consulta) {
       setFormData({
+        id: consulta.id,
         cliente: consulta.cliente,
         especialidade: consulta.especialidade,
         queixa: consulta.queixa,
@@ -37,13 +45,28 @@ export function AtualizarConsultaModal({
     }
   }, [isOpen, consulta]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    await atualizarConsulta();
     onUpdate({ ...consulta, ...formData });
     onClose();
   };
 
   if (!isOpen) return null;
+
+  async function atualizarConsulta() {
+    try {
+      await atualizar(`/consultas`, formData, setFormData, {
+        headers: { Authorization: token },
+      });
+
+      toast.success("Consulta atualizado com sucesso!");
+    } catch (error: any) {
+      if (error.toString().includes("403")) {
+        handleLogout();
+      }
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

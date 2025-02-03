@@ -19,7 +19,7 @@ const component = (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-9 items-center">
       <div className="flex justify-center items-center mb-4">
         <img
-          src="https://media.discordapp.net/attachments/1311370458414841927/1335635408289140908/Design_sem_nome_5.webp?ex=67a0e2e8&is=679f9168&hm=640fc6fd38f162bc770e15fc19908162387aa2ae587064b9d6dd39acc9108709&=&format=webp"
+          src="https://i.imgur.com/Xza8h0B.png"
           alt="Primeira Imagem"
           className="w-64 h-auto"
         />

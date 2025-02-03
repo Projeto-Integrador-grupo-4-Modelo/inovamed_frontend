@@ -103,8 +103,8 @@ function Login() {
         <div className="flex items-center justify-center mb-8">
           <h1 className="text-2xl font-bold tracking-tight flex items-center">
             <img
-              src="https://media.discordapp.net/attachments/1311370458414841927/1336006148935127142/WhatsApp_Image_2025-02-02_at_12.38.59.jpeg?ex=67a23c2f&is=67a0eaaf&hm=25685d0f065aaec9159a59507fd6d02da64464884ef1b43ec8d777d3dc4e8aa3&=&format=webp"
-              alt=""
+              src="https://i.imgur.com/ORaVOV1.png"
+              alt="inovamed"
               className="h-40 "
             />
           </h1>
