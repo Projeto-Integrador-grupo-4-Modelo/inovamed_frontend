@@ -262,7 +262,7 @@ function FormConsultas() {
                   required
                 >
                   <option value="Em andamento">Em andamento</option>
-                  <option value="Concluída">Concluída</option>
+
                   <option value="Cancelada">Cancelada</option>
                   <option value="Confirmada">Confirmada</option>
                 </select>
