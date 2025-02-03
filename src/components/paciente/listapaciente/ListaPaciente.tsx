@@ -42,7 +42,6 @@ export function ListaPaciente() {
         },
       });
 
-      alert("Paciente apagado com sucesso");
       setPacientes((prev) => prev.filter((p) => p.id !== id));
     } catch (error: any) {
       if (error.toString().includes("403")) {
