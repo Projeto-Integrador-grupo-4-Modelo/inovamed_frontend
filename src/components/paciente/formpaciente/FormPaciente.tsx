@@ -23,6 +23,7 @@ function FormPaciente() {
       await buscar(`/clientes/${id}`, setCliente, {
         headers: { Authorization: token },
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();
@@ -72,6 +73,7 @@ function FormPaciente() {
         });
         toast.success("O Paciente foi cadastrado com sucesso!");
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();
@@ -86,7 +88,7 @@ function FormPaciente() {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="px-6 py-8">
           <h2 className="text-2xl font-bold text-center text-[#29bda6] mb-8">
             Formulário de Cadastro

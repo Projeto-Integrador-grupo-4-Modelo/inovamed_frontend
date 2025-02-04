@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Consulta from "../../../models/Consulta";
 import { AtualizarConsultaModal } from "../atualizarconsulta/AtualizarConsulta";
-import Cliente from "../../../models/Cliente";
 
 interface CardConsultaProps {
   consulta: Consulta;

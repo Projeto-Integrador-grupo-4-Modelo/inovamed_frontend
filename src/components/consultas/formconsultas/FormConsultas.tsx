@@ -54,6 +54,7 @@ function FormConsultas() {
       if (clienteEncontrado) {
         setConsulta((prev) => ({ ...prev, cliente: clienteEncontrado }));
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     } catch (error: any) {
       setCliente(null);
       setConsulta((prev) => ({ ...prev, cliente: null }));

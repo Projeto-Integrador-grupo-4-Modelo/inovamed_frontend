@@ -3,7 +3,6 @@ import {
   Instagram,
   Youtube,
   Github,
-  Link,
   Mail,
   MapPin,
   Phone,
@@ -26,7 +25,7 @@ const component = (
       </div>
       <div className="border-t border-white-500 mb-8"></div>
       <div className="flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
           <div className="flex flex-col items-start">
             <h3 className="text-lg font-semibold text-white mb-4">Contato</h3>
             <div className="space-y-3">
@@ -44,40 +43,9 @@ const component = (
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-start">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Links Rápidos
-            </h3>
-            <ul className="space-y-2 text-white">
-              <li>
-                <Link
-                  to="/"
-                  className="text-white hover:text-[#00C49A] transition-colors"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/cadastro"
-                  className="text-white hover:text-[#00C49A] transition-colors"
-                >
-                  Cadastro
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/login"
-                  className="text-white hover:text-[#00C49A] transition-colors"
-                >
-                  Login
-                </Link>
-              </li>
-            </ul>
-          </div>
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">
-              Redes Sociais
+              Acesse nossas redes sociais
             </h3>
             <div className="flex space-x-4">
               <Github className="h-10 w-8 text-white hover:text-[#00C49A] transition-colors" />

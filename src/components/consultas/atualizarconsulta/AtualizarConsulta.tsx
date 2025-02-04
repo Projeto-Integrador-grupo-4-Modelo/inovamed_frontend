@@ -61,6 +61,7 @@ export function AtualizarConsultaModal({
       });
 
       toast.success("Consulta atualizado com sucesso!");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();

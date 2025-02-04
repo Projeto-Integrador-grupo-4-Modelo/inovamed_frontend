@@ -67,7 +67,7 @@ export function Sidebar() {
             <li key={index}>
               <Link
                 to={item.path}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors duration-200 group"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors duration-200 group "
               >
                 <item.icon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
                 <span className="font-medium">{item.label}</span>
@@ -77,7 +77,7 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-white/10 rounded-lg">
         <button
           onClick={Logout}
           className="flex items-center gap-3 px-4 py-3 w-full rounded-lg hover:bg-white/10 transition-colors duration-200 group"
