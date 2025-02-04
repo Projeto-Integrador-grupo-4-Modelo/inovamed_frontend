@@ -107,7 +107,7 @@ function FormConsultas() {
       });
 
       toast.success("Consulta cadastrada com sucesso!");
-      navigate("/dashboard");
+      navigate("/dashboard/Consulta");
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
       toast.error("Erro ao cadastrar consulta. Tente novamente.");

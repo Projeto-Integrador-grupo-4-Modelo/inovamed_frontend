@@ -11,7 +11,7 @@ function Navbar() {
         {usuario.token ? (
           <div className="text-black flex items-center gap-2">
             <h2 className="text-2xl font-semibold text-[#0D9488]">
-              Bem-vindo,
+              Bem-vindo(a),
             </h2>
             <h2 className="text-2xl font-bold text-[#1C74c8]">
               {usuario.nome}
