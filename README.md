@@ -1,3 +1,6 @@
+# Escopo do Projeto:
+https://docs.google.com/document/d/1hLD4sf-ZaU5FPJeq7NBr_Ysf-n_V1HdYrkDvO5N0cUM/edit?usp=sharing
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
