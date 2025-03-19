@@ -1,16 +1,26 @@
-import { User, Phone, Mail, MapPin, FileText, Heart } from "lucide-react";
-import Cliente from "../../../models/Cliente";
+import {
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  FileText,
+  Heart,
+  Building2,
+  Building,
+  Home,
+} from "lucide-react";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 import { atualizar, buscar, cadastrar } from "../../../service/Service";
 import { RotatingLines } from "react-loader-spinner";
 import toast from "react-hot-toast";
+import Paciente from "../../../models/Paciente";
 
 function FormPaciente() {
   const navigate = useNavigate();
 
-  const [cliente, setCliente] = useState<Cliente>({} as Cliente);
+  const [paciente, setPaciente] = useState<Paciente>({} as Paciente);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { usuario, handleLogout } = useContext(AuthContext);
@@ -20,10 +30,9 @@ function FormPaciente() {
 
   async function buscarPorId(id: string) {
     try {
-      await buscar(`/clientes/${id}`, setCliente, {
+      await buscar(`/pacientes/${id}`, setPaciente, {
         headers: { Authorization: token },
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();
@@ -47,8 +56,8 @@ function FormPaciente() {
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     const { name, type, checked, value } = e.target;
 
-    setCliente({
-      ...cliente,
+    setPaciente({
+      ...paciente,
       [name]: type === "checkbox" ? checked : value,
     });
   }
@@ -63,17 +72,16 @@ function FormPaciente() {
 
     try {
       if (id !== undefined) {
-        await atualizar(`/clientes`, cliente, setCliente, {
+        await atualizar(`/pacientes`, paciente, setPaciente, {
           headers: { Authorization: token },
         });
         toast.success("O Paciente foi atualizado com sucesso!");
       } else {
-        await cadastrar(`/clientes`, cliente, setCliente, {
+        await cadastrar(`/pacientes`, paciente, setPaciente, {
           headers: { Authorization: token },
         });
         toast.success("O Paciente foi cadastrado com sucesso!");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();
@@ -95,6 +103,7 @@ function FormPaciente() {
           </h2>
 
           <form onSubmit={gerarNovoCliente} className="space-y-6">
+            {/* Nome */}
             <div>
               <label className="flex items-center text-sm font-medium mb-1">
                 <User className="w-4 h-4 mr-2 text-[#29bda6]" />
@@ -105,12 +114,13 @@ function FormPaciente() {
                 name="nome"
                 placeholder="Digite seu nome"
                 className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
-                value={cliente.nome || ""}
+                value={paciente.nome || ""}
                 onChange={atualizarEstado}
                 required
               />
             </div>
 
+            {/* Email */}
             <div>
               <label className="flex items-center text-sm font-medium mb-1">
                 <Mail className="w-4 h-4 mr-2 text-[#29bda6]" />
@@ -121,12 +131,13 @@ function FormPaciente() {
                 name="email"
                 placeholder="Digite seu email"
                 className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
-                value={cliente.email || ""}
+                value={paciente.email || ""}
                 onChange={atualizarEstado}
                 required
               />
             </div>
 
+            {/* Telefone */}
             <div>
               <label className="flex items-center text-sm font-medium mb-1">
                 <Phone className="w-4 h-4 mr-2 text-[#29bda6]" />
@@ -137,12 +148,13 @@ function FormPaciente() {
                 name="telefone"
                 placeholder="Digite seu telefone"
                 className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
-                value={cliente.telefone || ""}
+                value={paciente.telefone || ""}
                 onChange={atualizarEstado}
                 required
               />
             </div>
 
+            {/* CPF */}
             <div>
               <label className="flex items-center text-sm font-medium mb-1">
                 <FileText className="w-4 h-4 mr-2 text-[#29bda6]" />
@@ -153,28 +165,100 @@ function FormPaciente() {
                 name="cpf"
                 placeholder="Digite seu CPF"
                 className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
-                value={cliente.cpf || ""}
+                value={paciente.cpf || ""}
                 onChange={atualizarEstado}
                 required
               />
             </div>
 
+            {/* Endereço e Complemento */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="flex items-center text-sm font-medium mb-1">
+                  <MapPin className="w-4 h-4 mr-2 text-[#29bda6]" />
+                  Endereço
+                </label>
+                <input
+                  type="text"
+                  name="endereco"
+                  placeholder="Digite seu endereço"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
+                  value={paciente.endereco || ""}
+                  onChange={atualizarEstado}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center text-sm font-medium mb-1">
+                  <Building className="w-4 h-4 mr-2 text-[#29bda6]" />
+                  Complemento
+                </label>
+                <input
+                  type="text"
+                  name="complemento"
+                  placeholder="Digite seu complemento"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
+                  value={paciente.complemento || ""}
+                  onChange={atualizarEstado}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* CEP e Bairro */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="flex items-center text-sm font-medium mb-1">
+                  <MapPin className="w-4 h-4 mr-2 text-[#29bda6]" />
+                  CEP
+                </label>
+                <input
+                  type="text"
+                  name="cep"
+                  placeholder="Digite seu CEP"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
+                  value={paciente.cep || ""}
+                  onChange={atualizarEstado}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center text-sm font-medium mb-1">
+                  <Home className="w-4 h-4 mr-2 text-[#29bda6]" />
+                  Bairro
+                </label>
+                <input
+                  type="text"
+                  name="bairro"
+                  placeholder="Digite seu bairro"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
+                  value={paciente.bairro || ""}
+                  onChange={atualizarEstado}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Cidade */}
             <div>
               <label className="flex items-center text-sm font-medium mb-1">
-                <MapPin className="w-4 h-4 mr-2 text-[#29bda6]" />
-                Endereço
+                <Building2 className="w-4 h-4 mr-2 text-[#29bda6]" />
+                Cidade
               </label>
               <input
                 type="text"
-                name="endereco"
-                placeholder="Digite seu endereço"
+                name="cidade"
+                placeholder="Digite sua cidade"
                 className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#29bda6] transition-colors"
-                value={cliente.endereco || ""}
+                value={paciente.cidade || ""}
                 onChange={atualizarEstado}
                 required
               />
             </div>
 
+            {/* Convênio */}
             <div className="flex items-center">
               <Heart className="w-4 h-4 mr-2 text-[#29bda6]" />
               <label className="text-sm font-medium">
@@ -182,13 +266,14 @@ function FormPaciente() {
                 <input
                   type="checkbox"
                   name="convenio"
-                  checked={cliente.convenio || false}
+                  checked={paciente.convenio || false}
                   onChange={atualizarEstado}
                   className="ml-2 h-4 w-4 text-[#29bda6] focus:ring-[#29bda6] border-[#29bda6] rounded"
                 />
               </label>
             </div>
 
+            {/* Botões */}
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
@@ -220,5 +305,4 @@ function FormPaciente() {
     </div>
   );
 }
-
 export default FormPaciente;

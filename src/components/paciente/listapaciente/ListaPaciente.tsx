@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Cliente from "../../../models/Cliente";
+import Paciente from "../../../models/Paciente";
 import { CardPaciente } from "../cardpaciente/CardPaciente";
 import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export function ListaPaciente() {
   const navigate = useNavigate();
-  const [pacientes, setPacientes] = useState<Cliente[]>([]);
+  const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const { usuario, handleLogout } = useContext(AuthContext);
   const token = usuario.token;
 
@@ -23,7 +23,7 @@ export function ListaPaciente() {
 
   async function buscaPacientes() {
     try {
-      await buscar("/clientes", setPacientes, {
+      await buscar("/pacientes", setPacientes, {
         headers: {
           Authorization: token,
         },
@@ -37,7 +37,7 @@ export function ListaPaciente() {
 
   async function deletaPaciente(id: number) {
     try {
-      await deletar(`/clientes/${id}`, {
+      await deletar(`/pacientes/${id}`, {
         headers: {
           Authorization: token,
         },
@@ -53,7 +53,7 @@ export function ListaPaciente() {
     }
   }
 
-  function atualizarPacienteNaLista(pacienteAtualizado: Cliente) {
+  function atualizarPacienteNaLista(pacienteAtualizado: Paciente) {
     setPacientes((prevPacientes) =>
       prevPacientes.map((p) =>
         p.id === pacienteAtualizado.id ? pacienteAtualizado : p
@@ -63,10 +63,10 @@ export function ListaPaciente() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <h2 className="text-2xl font-sans text-teal-950 mb-6">
+      <h2 className="text-3xl font-bold text-left text-[#00948aff] mb-8">
         Pacientes Cadastrados
       </h2>
-      <div className="space-y-6">
+      <div className="flex flex-col-reverse gap-y-8">
         {pacientes.map((paciente) => (
           <CardPaciente
             key={paciente.id}

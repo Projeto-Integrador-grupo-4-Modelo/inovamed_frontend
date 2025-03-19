@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { X } from "lucide-react";
 import Consulta from "../../../models/Consulta";
+import Medico from "../../../models/Medico";
 import { AuthContext } from "../../../context/AuthContext";
 import toast from "react-hot-toast";
-import { atualizar } from "../../../service/Service";
+import { atualizar, buscar } from "../../../service/Service"; // Supondo que 'buscar' seja o método GET da sua API.
 
 interface AtualizarConsultaModalProps {
   consulta: Consulta;
@@ -20,39 +21,42 @@ export function AtualizarConsultaModal({
 }: AtualizarConsultaModalProps) {
   const [formData, setFormData] = useState<Consulta>({
     id: 0,
-    cliente: null,
+    paciente: null,
     especialidade: "",
     queixa: "",
-    data: "",
-    medicoResponsavel: "",
+    dataHora: "",
+    medico: null,
+    statusPagamento: "",
     status: "",
   });
 
+  const [medicos, setMedicos] = useState<Medico[]>([]);
   const { usuario, handleLogout } = useContext(AuthContext);
   const token = usuario.token;
 
   useEffect(() => {
-    if (isOpen && consulta) {
-      setFormData({
-        id: consulta.id,
-        cliente: consulta.cliente,
-        especialidade: consulta.especialidade,
-        queixa: consulta.queixa,
-        data: consulta.data,
-        medicoResponsavel: consulta.medicoResponsavel,
-        status: consulta.status,
+    if (isOpen) {
+      buscar("/medicos", setMedicos, {
+        headers: { Authorization: token },
+      }).catch((error) => {
+        console.error("Erro ao buscar médicos:", error);
+        if (error.toString().includes("403")) handleLogout();
       });
+    }
+  }, [isOpen, token, handleLogout]);
+
+  useEffect(() => {
+    if (isOpen && consulta) {
+      setFormData({ ...consulta });
     }
   }, [isOpen, consulta]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await atualizarConsulta();
-    onUpdate({ ...consulta, ...formData });
+    onUpdate(formData);
     onClose();
   };
-
-  if (!isOpen) return null;
 
   async function atualizarConsulta() {
     try {
@@ -60,13 +64,51 @@ export function AtualizarConsultaModal({
         headers: { Authorization: token },
       });
 
-      toast.success("Consulta atualizado com sucesso!");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      toast.success("Consulta atualizada com sucesso!");
     } catch (error: any) {
       if (error.toString().includes("403")) {
         handleLogout();
       }
     }
+  }
+
+  const especialidades = [
+    "Cardiologia",
+    "Dermatologia",
+    "Endocrinologia",
+    "Ginecologia",
+    "Neurologia",
+    "Oftalmologia",
+    "Ortopedia",
+    "Pediatria",
+    "Psiquiatria",
+    "Urologia",
+  ];
+
+  const [especialidade, setEspecialidade] = useState("");
+  const [medicosEspecialistas, setMedicosEspecialistas] = useState<Medico[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (especialidade) {
+      buscar(
+        `/medicos/especialidade/${especialidade}`,
+        setMedicosEspecialistas,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+  }, [especialidade]);
+
+  if (!isOpen) return null;
+
+  function setValue(arg0: string, medicoSelecionado: Medico) {
+    throw new Error("Function not implemented.");
   }
 
   return (
@@ -84,36 +126,39 @@ export function AtualizarConsultaModal({
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Paciente */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Paciente
             </label>
             <input
               type="text"
-              value={consulta.cliente?.nome || "Paciente não informado"}
+              value={consulta.paciente?.nome || "Paciente não informado"}
               disabled
               className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700"
             />
           </div>
 
+          {/* Especialidade */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Especialidade
             </label>
-            <input
-              type="text"
-              value={formData.especialidade}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  especialidade: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
-              required
-            />
+            <select
+              value={especialidade}
+              onChange={(e) => setEspecialidade(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#29bda6] focus:border-[#29bda6] transition-colors"
+            >
+              <option value="">Selecione uma especialidade</option>
+              {especialidades.map((esp) => (
+                <option key={esp} value={esp}>
+                  {esp}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Queixa */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Queixa
@@ -129,43 +174,49 @@ export function AtualizarConsultaModal({
             />
           </div>
 
+          {/* Data */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Data
             </label>
             <input
               type="date"
-              value={formData.data}
+              value={formData.dataHora.split("T")[0]} // Caso venha no formato ISO
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, data: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  dataHora: e.target.value,
+                }))
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
               required
             />
           </div>
 
+          {/* Médico */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Médico Responsável
             </label>
             <select
-              value={formData.medicoResponsavel}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  medicoResponsavel: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-600"
-              required
+              onChange={(e) => {
+                const medicoSelecionado = medicosEspecialistas.find(
+                  (m) => m.id === Number(e.target.value)
+                );
+                setValue("medico", medicoSelecionado);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#29bda6] focus:border-[#29bda6] transition-colors"
             >
               <option value="">Selecione o médico</option>
-              <option value="Dr. Silva">Dr. Silva</option>
-              <option value="Dr. Costa">Dr. Costa</option>
-              <option value="Dr. Almeida">Dr. Almeida</option>
+              {medicosEspecialistas.map((medico) => (
+                <option key={medico.id} value={medico.id}>
+                  Dr(a). {medico.nome} - CRM: {medico.crm}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Status
@@ -186,6 +237,7 @@ export function AtualizarConsultaModal({
             </select>
           </div>
 
+          {/* Botões */}
           <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
@@ -196,11 +248,6 @@ export function AtualizarConsultaModal({
             </button>
             <button
               type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                onUpdate({ ...consulta, ...formData });
-                onClose();
-              }}
               className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
             >
               Salvar
