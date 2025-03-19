@@ -16,6 +16,7 @@ import { buscar } from "../../service/Service";
 import { AuthContext } from "../../context/AuthContext";
 import Consulta from "../../models/Consulta";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(
   CategoryScale,
@@ -33,6 +34,13 @@ export function Dashboard() {
 
   const { usuario, handleLogout } = useContext(AuthContext);
   const token = usuario.token;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token === "") {
+      toast.error("Você precisa estar logado");
+      navigate("/");
+    }
+  }, [token]);
 
   useEffect(() => {
     async function buscarDados() {
