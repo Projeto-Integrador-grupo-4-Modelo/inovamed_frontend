@@ -13,11 +13,10 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "./components/navbar/Navbar";
 import FormMedico from "./components/medicos/formmedico/FormMedico";
 
-
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/">
         <Toaster />
         <Routes>
           <Route path="/" element={<Home />} />
